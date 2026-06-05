@@ -1,0 +1,67 @@
+:root {
+  --bg: #f5efe6;
+  --panel: rgba(255, 252, 247, 0.86);
+  --border: #dccdbb;
+  --text: #544a42;
+  --text-strong: #1f2523;
+  --muted: #7b6e62;
+  --accent: #b65f3e;
+  --accent-soft: rgba(214, 119, 80, 0.15);
+  --success: #1a6c5d;
+  --danger: #a43d2b;
+  --shadow: 0 22px 60px rgba(73, 55, 39, 0.12);
+  --font-main: "Avenir Next", "Trebuchet MS", sans-serif;
+  --font-head: Georgia, "Times New Roman", serif;
+
+  font-family: var(--font-main);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.76), transparent 40%),
+    linear-gradient(180deg, #f6f1e8 0%, #efe4d4 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-head);
+  color: var(--text-strong);
+}
+
+h1 {
+  margin-top: 10px;
+  font-size: clamp(2.3rem, 5vw, 4.3rem);
+  line-height: 0.98;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}

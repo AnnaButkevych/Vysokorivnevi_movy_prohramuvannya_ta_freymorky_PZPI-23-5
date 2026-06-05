@@ -1,0 +1,84 @@
+:root {
+  --text: #4c5564;
+  --heading: #111827;
+  --muted: #667085;
+  --bg: #f4efe7;
+  --surface: rgba(255, 255, 255, 0.82);
+  --border: rgba(17, 24, 39, 0.09);
+  --accent: #f2994a;
+  --accent-strong: #2f6f8f;
+  --shadow:
+    rgba(15, 23, 42, 0.08) 0 20px 40px -16px,
+    rgba(15, 23, 42, 0.06) 0 10px 20px -16px;
+
+  font-family: ui-sans-serif, "Trebuchet MS", sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(242, 153, 74, 0.18), transparent 30%),
+    radial-gradient(
+      circle at bottom right,
+      rgba(47, 111, 143, 0.16),
+      transparent 28%
+    ),
+    var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.18;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  color: var(--heading);
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+pre,
+code {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Рівень 1 — Прогноз погоди</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        --bg: #f5efe6;
+        --panel: rgba(255, 255, 255, 0.9);
+        --border: rgba(17, 24, 39, 0.1);
+        --text: #334155;
+        --heading: #0f172a;
+        --accent: #ef7d38;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(239, 125, 56, 0.2),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(47, 111, 143, 0.16),
+            transparent 30%
+          ),
+          var(--bg);
+        color: var(--text);
+      }
+
+      main {
+        width: min(720px, 100%);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--panel);
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        color: var(--heading);
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+        margin: 20px 0;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        font-weight: 600;
+      }
+
+      input,
+      button,
+      output {
+        font: inherit;
+      }
+
+      input {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, var(--accent), #2f6f8f);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 18px;
+      }
+
+      .temp {
+        display: block;
+        margin-top: 8px;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--heading);
+      }
+
+      .error {
+        color: #b42318;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Рівень 1</p>
+      <h1>Прогноз погоди</h1>
+      <p>
+        Цей файл містить елемент &lt;script&gt; і виконує fetch для отримання
+        погодних даних.
+      </p>
+
+      <form id="weather-form">
+        <label>
+          Місто
+          <input
+            id="city-input"
+            type="text"
+            value="Kyiv"
+            placeholder="Kyiv, Lviv, Odesa"
+          />
+        </label>
+        <button type="submit">Показати погоду</button>
+      </form>
+
+      <section class="card" aria-live="polite">
+        <strong id="city-name">Kyiv</strong>
+        <span id="temperature" class="temp">-- °C</span>
+        <p id="description">Натисніть кнопку, щоб завантажити прогноз.</p>
+      </section>
+    </main>
+
+    <script>
+      const weatherDescriptions = {
+        0: "Ясно",
+        1: "Переважно ясно",
+        2: "Мінлива хмарність",
+        3: "Похмуро",
+        45: "Туман",
+        48: "Інійний туман",
+        51: "Слабка мряка",
+        53: "Помірна мряка",
+        55: "Сильна мряка",
+        61: "Слабкий дощ",
+        63: "Помірний дощ",
+        65: "Сильний дощ",
+        71: "Слабкий сніг",
+        73: "Помірний сніг",
+        75: "Сильний сніг",
+        80: "Зливи",
+        81: "Сильні зливи",
+        82: "Дуже сильні зливи",
+        95: "Гроза",
+        96: "Гроза з градом",
+        99: "Сильна гроза з градом",
+      };
+
+      const form = document.getElementById("weather-form");
+      const cityInput = document.getElementById("city-input");
+      const cityName = document.getElementById("city-name");
+      const temperature = document.getElementById("temperature");
+      const description = document.getElementById("description");
+
+      async function loadWeather(city) {
+        try {
+          description.textContent = "Завантаження...";
+
+          const locationResponse = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=uk&format=json`,
+          );
+          const locationData = await locationResponse.json();
+          const location = locationData.results?.[0];
+
+          if (!location) {
+            throw new Error("Місто не знайдено");
+          }
+
+          const weatherResponse = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,weather_code&timezone=auto`,
+          );
+          const weatherData = await weatherResponse.json();
+
+          cityName.textContent = `${location.name}${location.country ? `, ${location.country}` : ""}`;
+          temperature.textContent = `${weatherData.current.temperature_2m} °C`;
+          description.textContent =
+            weatherDescriptions[weatherData.current.weather_code] ??
+            "Невідомі умови";
+        } catch (error) {
+          cityName.textContent = city;
+          temperature.textContent = "-- °C";
+          description.textContent = `Не вдалося отримати прогноз: ${error.message}`;
+          description.classList.add("error");
+        }
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        description.classList.remove("error");
+        loadWeather(cityInput.value.trim() || "Kyiv");
+      });
+
+      loadWeather("Kyiv");
+    </script>
+  </body>
+</html>
